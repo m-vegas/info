@@ -838,6 +838,27 @@
             // Показать экран настройки вызова
             callScreenSetup.classList.add('active');
 
+            // Обработчики кнопок управления (добавлены сразу)
+            muteBtn.addEventListener('click', () => {
+                if (!localStream) return;
+                isMuted = !isMuted;
+                localStream.getAudioTracks().forEach(track => {
+                    track.enabled = !isMuted;
+                });
+                muteBtn.classList.toggle('active', isMuted);
+                muteBtn.innerHTML = isMuted 
+                    ? '<i class="fas fa-microphone-slash"></i>' 
+                    : '<i class="fas fa-microphone"></i>';
+            });
+
+            videoBtn.addEventListener('click', () => {
+                if (!localStream) return;
+                isVideoOn = !isVideoOn;
+                videoBtn.classList.toggle('active', isVideoOn);
+            });
+
+            hangupBtn.addEventListener('click', endCall);
+
             // Переключение между вкладками
             callTab.addEventListener('click', () => {
                 callScreen.classList.remove('hidden');
@@ -918,9 +939,6 @@
                         
                         // Имитация видео потока
                         remoteVideo.srcObject = new MediaStream();
-                        
-                        // Установка обработчиков для кнопок
-                        setupCallControls();
                     }, 1500);
                 } catch (error) {
                     console.error('Ошибка доступа к медиаустройствам:', error);
@@ -964,9 +982,6 @@
                         
                         // Имитация видео потока
                         remoteVideo.srcObject = new MediaStream();
-                        
-                        // Установка обработчиков для кнопок
-                        setupCallControls();
                     }, 1500);
                 } catch (error) {
                     console.error('Ошибка доступа к медиаустройствам:', error);
@@ -984,33 +999,6 @@
                     const secs = callSeconds % 60;
                     callStatus.textContent = `В сети • ${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
                 }, 1000);
-            }
-
-            // Настройка обработчиков кнопок во время звонка
-            function setupCallControls() {
-                // Управление микрофоном
-                muteBtn.addEventListener('click', () => {
-                    isMuted = !isMuted;
-                    if (localStream) {
-                        localStream.getAudioTracks().forEach(track => {
-                            track.enabled = !isMuted;
-                        });
-                    }
-                    muteBtn.classList.toggle('active', isMuted);
-                    muteBtn.innerHTML = isMuted 
-                        ? '<i class="fas fa-microphone-slash"></i>' 
-                        : '<i class="fas fa-microphone"></i>';
-                });
-
-                // Управление видео
-                videoBtn.addEventListener('click', () => {
-                    isVideoOn = !isVideoOn;
-                    videoBtn.classList.toggle('active', isVideoOn);
-                    // Здесь можно добавить логику включения/выключения видео
-                });
-
-                // Завершение вызова
-                hangupBtn.addEventListener('click', endCall);
             }
 
             // Завершение вызова
