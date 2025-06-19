@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project X | Премиум голосовой чат</title>
+    <title>Project X | Голосовой чат</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vegas@2.5.4/dist/vegas.min.js"></script>
@@ -39,7 +39,6 @@
             position: relative;
         }
 
-        /* Vegas фон с анимацией */
         #vegas-bg {
             position: fixed;
             top: 0;
@@ -50,16 +49,6 @@
             opacity: 0.7;
         }
 
-        /* Эффект частиц */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.3;
-        }
-
-        /* Основной контейнер */
         .container {
             display: flex;
             height: 100vh;
@@ -68,7 +57,6 @@
             backdrop-filter: blur(12px);
         }
 
-        /* Боковая панель */
         .sidebar {
             width: 90px;
             background: var(--glass);
@@ -148,23 +136,6 @@
             z-index: 1;
         }
 
-        .nav-item .notification {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--danger);
-            color: white;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-        }
-
-        /* Основная область */
         .main {
             flex: 1;
             display: flex;
@@ -174,7 +145,6 @@
             overflow: hidden;
         }
 
-        /* Шапка */
         .header {
             display: flex;
             align-items: center;
@@ -227,7 +197,6 @@
             background: var(--danger);
         }
 
-        /* Карточка пользователя */
         .user-card {
             flex: 1;
             display: flex;
@@ -312,7 +281,6 @@
             line-height: 1.5;
         }
 
-        /* Видео элементы */
         .video-container {
             position: relative;
             width: 100%;
@@ -340,7 +308,6 @@
             transform: scaleX(-1);
         }
 
-        /* Управление */
         .controls {
             display: flex;
             justify-content: center;
@@ -406,7 +373,6 @@
             background: var(--danger);
         }
 
-        /* Экран вызова */
         .call-screen {
             position: absolute;
             top: 0;
@@ -541,7 +507,32 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        /* Vegas бейдж */
+        .settings-panel {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .settings-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .settings-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .settings-option label {
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
         .vegas-badge {
             position: fixed;
             bottom: 20px;
@@ -569,7 +560,6 @@
             font-size: 18px;
         }
 
-        /* Анимации */
         @keyframes pulse {
             0% { transform: scale(1); opacity: 0.7; }
             50% { transform: scale(1.1); opacity: 1; }
@@ -587,7 +577,6 @@
             100% { transform: translateY(0px); }
         }
 
-        /* Модификаторы */
         .hidden {
             display: none;
         }
@@ -600,7 +589,6 @@
             animation: float 4s ease-in-out infinite;
         }
 
-        /* Адаптив */
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -629,14 +617,9 @@
     </style>
 </head>
 <body>
-    <!-- Vegas фон -->
     <div id="vegas-bg"></div>
-    
-    <!-- Эффект частиц -->
-    <div id="particles-js"></div>
 
     <div class="container">
-        <!-- Боковая панель -->
         <div class="sidebar">
             <div class="logo">PX</div>
             <div class="nav-item active" id="callTab">
@@ -644,16 +627,13 @@
             </div>
             <div class="nav-item" id="contactsTab">
                 <i class="fas fa-user-friends"></i>
-                <div class="notification">3</div>
             </div>
             <div class="nav-item" id="settingsTab">
                 <i class="fas fa-cog"></i>
             </div>
         </div>
 
-        <!-- Основная область -->
         <div class="main">
-            <!-- Экран звонка -->
             <div id="callScreen">
                 <div class="header">
                     <div class="channel-name">Голосовой вызов</div>
@@ -692,19 +672,86 @@
                     <button class="control-btn" id="effectsBtn">
                         <i class="fas fa-magic"></i>
                     </button>
-                    <button class="control-btn" id="moreBtn">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
+                </div>
+            </div>
+
+            <div id="settingsScreen" class="hidden">
+                <h2 class="channel-name">Настройки</h2>
+                
+                <div class="settings-panel">
+                    <h3 class="settings-title">Аудио</h3>
+                    
+                    <div class="settings-option">
+                        <input type="checkbox" id="noiseSuppression" checked>
+                        <label for="noiseSuppression">Подавление шума</label>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <input type="checkbox" id="echoCancellation" checked>
+                        <label for="echoCancellation">Эхоподавление</label>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="inputDevice">Микрофон:</label>
+                        <select id="inputDevice" class="call-input">
+                            <option value="default">По умолчанию</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="outputDevice">Динамики:</label>
+                        <select id="outputDevice" class="call-input">
+                            <option value="default">По умолчанию</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-panel">
+                    <h3 class="settings-title">Видео</h3>
+                    
+                    <div class="settings-option">
+                        <input type="checkbox" id="hdVideo" checked>
+                        <label for="hdVideo">HD качество</label>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="cameraDevice">Камера:</label>
+                        <select id="cameraDevice" class="call-input">
+                            <option value="default">По умолчанию</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-panel">
+                    <h3 class="settings-title">Эффекты</h3>
+                    
+                    <div class="settings-option">
+                        <label for="voiceEffect">Эффект голоса:</label>
+                        <select id="voiceEffect" class="call-input">
+                            <option value="none">Нет</option>
+                            <option value="robot">Робот</option>
+                            <option value="echo">Эхо</option>
+                            <option value="radio">Рация</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-option">
+                        <label for="backgroundEffect">Фон:</label>
+                        <select id="backgroundEffect" class="call-input">
+                            <option value="none">Нет</option>
+                            <option value="blur">Размытие</option>
+                            <option value="virtual">Виртуальный</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Экран вызова -->
     <div class="call-screen" id="callScreenSetup">
         <div class="call-card">
             <h2 class="call-title">Project X</h2>
-            <p class="call-description">Премиум голосовой чат с кристально чистым звуком и Vegas+ эффектами</p>
+            <p class="call-description">Премиум голосовой чат с кристально чистым звуком</p>
             
             <div class="hidden" id="callIdContainer">
                 <p class="call-description">Ваш ID для подключения:</p>
@@ -731,19 +778,14 @@
         </div>
     </div>
 
-    <!-- Vegas бейдж -->
     <div class="vegas-badge">
         <i class="fas fa-crown"></i>
         <span>Vegas+ Experience</span>
     </div>
 
-    <!-- Скрипты -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <script>
         // Инициализация Vegas фона
         document.addEventListener('DOMContentLoaded', function() {
-            // Анимированный фон
             vegas({
                 el: '#vegas-bg',
                 slides: [
@@ -756,28 +798,12 @@
                 animation: 'kenburns'
             });
 
-            // Эффект частиц
-            particlesJS('particles-js', {
-                particles: {
-                    number: { value: 60, density: { enable: true, value_area: 800 } },
-                    color: { value: "#6C5CE7" },
-                    shape: { type: "circle" },
-                    opacity: { value: 0.5, random: true },
-                    size: { value: 3, random: true },
-                    line_linked: { enable: true, distance: 150, color: "#6C5CE7", opacity: 0.3, width: 1 },
-                    move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
-                },
-                interactivity: {
-                    detect_on: "canvas",
-                    events: {
-                        onhover: { enable: true, mode: "repulse" },
-                        onclick: { enable: true, mode: "push" }
-                    }
-                }
-            });
-
             // Элементы интерфейса
             const callScreen = document.getElementById('callScreen');
+            const settingsScreen = document.getElementById('settingsScreen');
+            const callTab = document.getElementById('callTab');
+            const contactsTab = document.getElementById('contactsTab');
+            const settingsTab = document.getElementById('settingsTab');
             const callScreenSetup = document.getElementById('callScreenSetup');
             const callIdContainer = document.getElementById('callIdContainer');
             const joinCallContainer = document.getElementById('joinCallContainer');
@@ -788,7 +814,9 @@
             const startCallBtn = document.getElementById('startCallBtn');
             const copyCallIdBtn = document.getElementById('copyCallIdBtn');
             const muteBtn = document.getElementById('muteBtn');
+            const videoBtn = document.getElementById('videoBtn');
             const hangupBtn = document.getElementById('hangupBtn');
+            const effectsBtn = document.getElementById('effectsBtn');
             const userAvatar = document.getElementById('userAvatar');
             const userName = document.getElementById('userName');
             const connectionStatus = document.getElementById('connectionStatus');
@@ -797,9 +825,34 @@
             const callStatus = document.getElementById('callStatus');
             const videoContainer = document.getElementById('videoContainer');
             const remoteVideo = document.getElementById('remoteVideo');
+            
+            // Состояние приложения
+            let callTimer;
+            let callSeconds = 0;
+            let isMuted = false;
+            let isVideoOn = false;
+            let currentCallId = '';
+            let localStream;
+            let remoteStream;
 
             // Показать экран настройки вызова
             callScreenSetup.classList.add('active');
+
+            // Переключение между вкладками
+            callTab.addEventListener('click', () => {
+                callScreen.classList.remove('hidden');
+                settingsScreen.classList.add('hidden');
+                callTab.classList.add('active');
+                contactsTab.classList.remove('active');
+                settingsTab.classList.remove('active');
+            });
+
+            settingsTab.addEventListener('click', () => {
+                callScreen.classList.add('hidden');
+                settingsScreen.classList.remove('hidden');
+                callTab.classList.remove('active');
+                settingsTab.classList.add('active');
+            });
 
             // Генерация случайного ID
             function generateCallId() {
@@ -820,15 +873,15 @@
 
             // Создание вызова
             createCallBtn.addEventListener('click', () => {
-                const callId = generateCallId();
-                callIdDisplay.textContent = callId;
+                currentCallId = generateCallId();
+                callIdDisplay.textContent = currentCallId;
                 joinCallContainer.classList.add('hidden');
                 callIdContainer.classList.remove('hidden');
             });
 
             // Копирование ID
             copyCallIdBtn.addEventListener('click', () => {
-                navigator.clipboard.writeText(callIdDisplay.textContent);
+                navigator.clipboard.writeText(currentCallId);
                 copyCallIdBtn.innerHTML = '<i class="fas fa-check"></i>';
                 setTimeout(() => {
                     copyCallIdBtn.innerHTML = '<i class="fas fa-copy"></i>';
@@ -836,75 +889,147 @@
             });
 
             // Начать вызов
-            startCallBtn.addEventListener('click', () => {
-                callScreenSetup.classList.remove('active');
-                userAvatar.textContent = 'ИП';
-                userName.textContent = 'Иван Петров';
-                connectionStatus.textContent = 'Ожидание подключения...';
-                
-                // Имитация подключения
-                setTimeout(() => {
-                    userStatus.classList.remove('offline');
-                    userStatus.classList.add('online');
-                    connectionDot.classList.remove('offline');
-                    connectionDot.classList.add('online');
-                    callStatus.textContent = 'В сети • 00:00';
-                    connectionStatus.textContent = 'Говорит';
-                    videoContainer.classList.remove('hidden');
+            startCallBtn.addEventListener('click', async () => {
+                try {
+                    // Запрос доступа к микрофону
+                    localStream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: true,
+                        video: false 
+                    });
                     
-                    // Таймер звонка
-                    let seconds = 0;
-                    setInterval(() => {
-                        seconds++;
-                        const minutes = Math.floor(seconds / 60);
-                        const secs = seconds % 60;
-                        callStatus.textContent = `В сети • ${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                    }, 1000);
-                }, 1500);
-            });
-
-            // Присоединиться к вызову
-            joinCallBtn.addEventListener('click', () => {
-                if (callIdInput.value.trim() === '') return;
-                
-                callScreenSetup.classList.remove('active');
-                userAvatar.textContent = 'АС';
-                userName.textContent = 'Алексей Смирнов';
-                connectionStatus.textContent = 'Подключение...';
-                
-                // Имитация подключения
-                setTimeout(() => {
-                    userStatus.classList.remove('offline');
-                    userStatus.classList.add('online');
-                    connectionDot.classList.remove('offline');
-                    connectionDot.classList.add('online');
-                    callStatus.textContent = 'В сети • 00:00';
-                    connectionStatus.textContent = 'Говорит';
-                    videoContainer.classList.remove('hidden');
+                    // Настройка UI
+                    callScreenSetup.classList.remove('active');
+                    userAvatar.textContent = 'ИП';
+                    userName.textContent = 'Иван Петров';
+                    connectionStatus.textContent = 'Ожидание подключения...';
                     
-                    // Таймер звонка
-                    let seconds = 0;
-                    setInterval(() => {
-                        seconds++;
-                        const minutes = Math.floor(seconds / 60);
-                        const secs = seconds % 60;
-                        callStatus.textContent = `В сети • ${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                    }, 1000);
-                }, 1500);
-            });
-
-            // Управление микрофоном
-            muteBtn.addEventListener('click', () => {
-                muteBtn.classList.toggle('active');
-                if (muteBtn.classList.contains('active')) {
-                    muteBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-                } else {
-                    muteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                    // Имитация подключения
+                    setTimeout(() => {
+                        userStatus.classList.remove('offline');
+                        userStatus.classList.add('online');
+                        connectionDot.classList.remove('offline');
+                        connectionDot.classList.add('online');
+                        callStatus.textContent = 'В сети • 00:00';
+                        connectionStatus.textContent = 'Говорит';
+                        videoContainer.classList.remove('hidden');
+                        
+                        // Таймер звонка
+                        startCallTimer();
+                        
+                        // Имитация видео потока
+                        remoteVideo.srcObject = new MediaStream();
+                        
+                        // Установка обработчиков для кнопок
+                        setupCallControls();
+                    }, 1500);
+                } catch (error) {
+                    console.error('Ошибка доступа к медиаустройствам:', error);
+                    alert('Не удалось получить доступ к микрофону. Пожалуйста, проверьте разрешения.');
                 }
             });
 
+            // Присоединиться к вызову
+            joinCallBtn.addEventListener('click', async () => {
+                const callId = callIdInput.value.trim();
+                if (!callId) {
+                    alert('Пожалуйста, введите ID вызова');
+                    return;
+                }
+                
+                try {
+                    // Запрос доступа к микрофону
+                    localStream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: true,
+                        video: false 
+                    });
+                    
+                    // Настройка UI
+                    callScreenSetup.classList.remove('active');
+                    userAvatar.textContent = 'АС';
+                    userName.textContent = 'Алексей Смирнов';
+                    connectionStatus.textContent = 'Подключение...';
+                    
+                    // Имитация подключения
+                    setTimeout(() => {
+                        userStatus.classList.remove('offline');
+                        userStatus.classList.add('online');
+                        connectionDot.classList.remove('offline');
+                        connectionDot.classList.add('online');
+                        callStatus.textContent = 'В сети • 00:00';
+                        connectionStatus.textContent = 'Говорит';
+                        videoContainer.classList.remove('hidden');
+                        
+                        // Таймер звонка
+                        startCallTimer();
+                        
+                        // Имитация видео потока
+                        remoteVideo.srcObject = new MediaStream();
+                        
+                        // Установка обработчиков для кнопок
+                        setupCallControls();
+                    }, 1500);
+                } catch (error) {
+                    console.error('Ошибка доступа к медиаустройствам:', error);
+                    alert('Не удалось получить доступ к микрофону. Пожалуйста, проверьте разрешения.');
+                }
+            });
+
+            // Запуск таймера звонка
+            function startCallTimer() {
+                callSeconds = 0;
+                clearInterval(callTimer);
+                callTimer = setInterval(() => {
+                    callSeconds++;
+                    const minutes = Math.floor(callSeconds / 60);
+                    const secs = callSeconds % 60;
+                    callStatus.textContent = `В сети • ${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+
+            // Настройка обработчиков кнопок во время звонка
+            function setupCallControls() {
+                // Управление микрофоном
+                muteBtn.addEventListener('click', () => {
+                    isMuted = !isMuted;
+                    if (localStream) {
+                        localStream.getAudioTracks().forEach(track => {
+                            track.enabled = !isMuted;
+                        });
+                    }
+                    muteBtn.classList.toggle('active', isMuted);
+                    muteBtn.innerHTML = isMuted 
+                        ? '<i class="fas fa-microphone-slash"></i>' 
+                        : '<i class="fas fa-microphone"></i>';
+                });
+
+                // Управление видео
+                videoBtn.addEventListener('click', () => {
+                    isVideoOn = !isVideoOn;
+                    videoBtn.classList.toggle('active', isVideoOn);
+                    // Здесь можно добавить логику включения/выключения видео
+                });
+
+                // Завершение вызова
+                hangupBtn.addEventListener('click', endCall);
+            }
+
             // Завершение вызова
-            hangupBtn.addEventListener('click', () => {
+            function endCall() {
+                // Остановка таймера
+                clearInterval(callTimer);
+                
+                // Остановка медиапотоков
+                if (localStream) {
+                    localStream.getTracks().forEach(track => track.stop());
+                    localStream = null;
+                }
+                
+                if (remoteVideo.srcObject) {
+                    remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+                    remoteVideo.srcObject = null;
+                }
+                
+                // Сброс UI
                 callScreenSetup.classList.add('active');
                 joinCallContainer.classList.remove('hidden');
                 callIdContainer.classList.add('hidden');
@@ -916,13 +1041,15 @@
                 userName.textContent = 'Не подключено';
                 connectionStatus.textContent = 'Ожидание подключения';
                 videoContainer.classList.add('hidden');
-            });
-
-            // Имитация видео потока (для демонстрации)
-            setTimeout(() => {
-                remoteVideo.src = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
-                remoteVideo.loop = true;
-            }, 3000);
+                
+                // Сброс состояния
+                isMuted = false;
+                isVideoOn = false;
+                currentCallId = '';
+                muteBtn.classList.remove('active');
+                videoBtn.classList.remove('active');
+                muteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            }
         });
     </script>
 </body>
