@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project X — Голосовой чат</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vegas@2.5.4/dist/vegas.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vegas@2.5.4/dist/vegas.min.css">
+    <style>
+        :root {
+            --primary: #FF2D55;
+            --secondary: #5856D6;
+            --dark: #1E1E1E;
+            --darker: #121212;
+            --light: #FFFFFF;
+            --gray: #8E8E93;
+            --glass: rgba(30, 30, 30, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Vegas фон */
+        #vegas-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* Основной контейнер */
+        .container {
+            display: flex;
+            height: 100vh;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Боковая панель */
+        .sidebar {
+            width: 280px;
+            background-color: var(--glass);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin: 20px 0 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Голосовые каналы */
+        .voice-channel {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(0,0,0,0.3);
+        }
+
+        .voice-channel:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .voice-channel.active {
+            background-color: rgba(88, 86, 214, 0.2);
+            border-left: 3px solid var(--secondary);
+        }
+
+        .channel-icon {
+            margin-right: 12px;
+            color: var(--secondary);
+        }
+
+        .channel-name {
+            font-weight: 500;
+        }
+
+        .channel-users {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Основная область чата */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .channel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .channel-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .channel-status {
+            margin-left: 15px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Участники */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .user-card {
+            background-color: var(--glass);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .user-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .user-status {
+            font-size: 12px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            margin-right: 5px;
+        }
+
+        .status-indicator.talking {
+            background-color: #34C759;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-indicator.muted {
+            background-color: var(--gray);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Управление */
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+            gap: 15px;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .control-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .control-btn.active {
+            background-color: var(--primary);
+        }
+
+        .control-btn i {
+            font-size: 20px;
+        }
+
+        /* Vegas бейдж */
+        .vegas-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--glass);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .vegas-badge i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        /* Анимации */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Vegas фон -->
+    <div id="vegas-background"></div>
+
+    <div class="container">
+        <!-- Боковая панель -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <div class="logo-text">PROJECT X</div>
+            </div>
+
+            <div class="section-title">Голосовые каналы</div>
+            
+            <div class="voice-channel active" data-channel="general">
+                <i class="fas fa-users channel-icon"></i>
+                <div class="channel-name">Общий чат</div>
+                <div class="channel-users">5 участников</div>
+            </div>
+            
+            <div class="voice-channel" data-channel="gaming">
+                <i class="fas fa-gamepad channel-icon"></i>
+                <div class="channel-name">Игры</div>
+                <div class="channel-users">3 участника</div>
+            </div>
+            
+            <div class="voice-channel" data-channel="music">
+                <i class="fas fa-music channel-icon"></i>
+                <div class="channel-name">Музыка</div>
+                <div class="channel-users">2 участника</div>
+            </div>
+        </div>
+
+        <!-- Основная область -->
+        <div class="main-content">
+            <div class="channel-header">
+                <div class="channel-title">Общий чат</div>
+                <div class="channel-status">5 участников онлайн</div>
+            </div>
+            
+            <div class="users-grid">
+                <div class="user-card fade-in">
+                    <div class="user-avatar">ИП</div>
+                    <div class="user-info">
+                        <div class="user-name">Иван Петров</div>
+                        <div class="user-status">
+                            <div class="status-indicator talking"></div>
+                            <span>Говорит</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-card fade-in">
+                    <div class="user-avatar">АС</div>
+                    <div class="user-info">
+                        <div class="user-name">Алексей Смирнов</div>
+                        <div class="user-status">
+                            <div class="status-indicator"></div>
+                            <span>В сети</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-card fade-in">
+                    <div class="user-avatar">МК</div>
+                    <div class="user-info">
+                        <div class="user-name">Мария Кузнецова</div>
+                        <div class="user-status">
+                            <div class="status-indicator talking"></div>
+                            <span>Говорит</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-card fade-in">
+                    <div class="user-avatar">ДИ</div>
+                    <div class="user-info">
+                        <div class="user-name">Дмитрий Иванов</div>
+                        <div class="user-status">
+                            <div class="status-indicator muted"></div>
+                            <span>Без звука</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-card fade-in">
+                    <div class="user-avatar">ЕВ</div>
+                    <div class="user-info">
+                        <div class="user-name">Елена Васильева</div>
+                        <div class="user-status">
+                            <div class="status-indicator"></div>
+                            <span>В сети</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-btn">
+                    <i class="fas fa-microphone-slash"></i>
+                </div>
+                <div class="control-btn">
+                    <i class="fas fa-headphones"></i>
+                </div>
+                <div class="control-btn active">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <div class="control-btn">
+                    <i class="fas fa-cog"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vegas бейдж -->
+    <div class="vegas-badge">
+        <i class="fas fa-crown"></i>
+        <span>Vegas+ технология</span>
+    </div>
+
+    <script>
+        // Инициализация Vegas фона
+        document.addEventListener('DOMContentLoaded', function() {
+            vegas({
+                el: '#vegas-background',
+                slides: [
+                    { src: 'https://source.unsplash.com/random/1920x1080?luxury,night' },
+                    { src: 'https://source.unsplash.com/random/1920x1080?club,party' },
+                    { src: 'https://source.unsplash.com/random/1920x1080?neon,lights' }
+                ],
+                transition: 'fade',
+                delay: 5000,
+                animation: 'kenburns'
+            });
+
+            // Переключение каналов
+            const channels = document.querySelectorAll('.voice-channel');
+            channels.forEach(channel => {
+                channel.addEventListener('click', function() {
+                    // Удаляем активный класс у всех каналов
+                    channels.forEach(c => c.classList.remove('active'));
+                    
+                    // Добавляем активный класс текущему каналу
+                    this.classList.add('active');
+                    
+                    // Обновляем заголовок
+                    const channelName = this.querySelector('.channel-name').textContent;
+                    document.querySelector('.channel-title').textContent = channelName;
+                    
+                    // Обновляем количество участников
+                    const usersCount = this.querySelector('.channel-users').textContent;
+                    document.querySelector('.channel-status').textContent = usersCount + ' онлайн';
+                });
+            });
+
+            // Имитация входа пользователя
+            setTimeout(() => {
+                const usersGrid = document.querySelector('.users-grid');
+                const newUser = document.createElement('div');
+                newUser.className = 'user-card fade-in';
+                newUser.innerHTML = `
+                    <div class="user-avatar">НЮ</div>
+                    <div class="user-info">
+                        <div class="user-name">Никита Юдин</div>
+                        <div class="user-status">
+                            <div class="status-indicator"></div>
+                            <span>В сети</span>
+                        </div>
+                    </div>
+                `;
+                usersGrid.appendChild(newUser);
+                
+                // Обновляем счетчик
+                document.querySelector('.channel-status').textContent = '6 участников онлайн';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
