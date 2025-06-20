@@ -365,24 +365,7 @@
 
         /* Video controls */
         .video-controls {
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .video-btn {
-            background: rgba(0, 255, 170, 0.1);
-            border: 1px solid var(--neon-green);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .video-btn:hover {
-            background: rgba(0, 255, 170, 0.3);
+            display: none; /* Скрываем кнопки управления видео */
         }
         
         /* Animations */
@@ -542,12 +525,7 @@
         <div class="coming-soon no-select">СКОРО ЧТО-ТО БУДЕТ...</div>
         
         <div class="video-container">
-            <iframe id="youtube-video" src="https://www.youtube.com/embed/yHVrZLsV71k?autoplay=1&loop=1&mute=1&controls=0&playlist=yHVrZLsV71k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        
-        <div class="video-controls">
-            <button class="video-btn" id="unmute-video"><i class="fas fa-volume-up"></i> Включить звук</button>
-            <button class="video-btn" id="mute-video"><i class="fas fa-volume-mute"></i> Выключить звук</button>
+            <iframe id="youtube-video" src="https://www.youtube.com/embed/yHVrZLsV71k?autoplay=1&loop=1&mute=0&controls=0&playlist=yHVrZLsV71k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="social-links">
@@ -603,9 +581,6 @@
         const playPauseBtn = document.getElementById('play-pause-btn');
         const volumeControl = document.getElementById('volume-control');
         const bgMusic = document.getElementById('bg-music');
-        const youtubeVideo = document.getElementById('youtube-video');
-        const unmuteVideoBtn = document.getElementById('unmute-video');
-        const muteVideoBtn = document.getElementById('mute-video');
         
         let isMusicPlaying = false;
         
@@ -631,15 +606,6 @@
             bgMusic.volume = this.value;
         });
         
-        // Video controls
-        unmuteVideoBtn.addEventListener('click', function() {
-            youtubeVideo.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-        });
-        
-        muteVideoBtn.addEventListener('click', function() {
-            youtubeVideo.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
-        });
-        
         // Initialize
         window.onload = function() {
             createPets();
@@ -660,11 +626,6 @@
                         console.log('Autoplay prevented, showing play button');
                     });
             }
-            
-            // Enable video sound after user interaction
-            document.addEventListener('click', function() {
-                youtubeVideo.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-            }, { once: true });
         };
         
         // Easter egg - click logo to change colors
