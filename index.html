@@ -183,6 +183,18 @@
             border: none;
         }
         
+        .video-error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--neon-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            text-align: center;
+            width: 80%;
+        }
+        
         .social-links {
             margin-top: 40px;
             display: flex;
@@ -500,9 +512,9 @@
         <div class="coming-soon">СКОРО ЧТО-ТО БУДЕТ...</div>
         
         <div class="video-container">
-            <video id="local-video" autoplay loop muted>
+            <video id="local-video" autoplay loop muted playsinline>
                 <source src="vlove.mp4" type="video/mp4">
-                Your browser does not support the video tag.
+                <div class="video-error">Ошибка загрузки видео. Убедитесь, что файл vlove.mp4 находится в той же папке.</div>
             </video>
         </div>
         
@@ -585,6 +597,16 @@
         volumeControl.addEventListener('input', function() {
             bgMusic.volume = this.value;
             localVideo.volume = this.value;
+        });
+        
+        // Check if video loaded successfully
+        localVideo.addEventListener('error', function() {
+            console.error('Ошибка загрузки видео');
+            const videoContainer = document.querySelector('.video-container');
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'video-error';
+            errorMsg.textContent = 'Ошибка: файл vlove.mp4 не найден или повреждён.';
+            videoContainer.appendChild(errorMsg);
         });
         
         // Initialize
