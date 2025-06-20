@@ -3,1040 +3,546 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project X | Голосовой чат</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/vegas@2.5.4/dist/vegas.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vegas@2.5.4/dist/vegas.min.css">
+    <title>M.Vegas - Web Developer</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        
         :root {
-            --primary: #6C5CE7;
-            --primary-dark: #5649c0;
-            --accent: #00CEC9;
-            --dark: #0F0F2D;
-            --darker: #0A0A1F;
-            --light: #FFFFFF;
-            --gray: #8E8E93;
-            --success: #00C853;
-            --danger: #FF3D00;
-            --glass: rgba(15, 15, 45, 0.85);
-            --glass-light: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --neon-green: #00ffaa;
+            --neon-pink: #ff00aa;
+            --neon-blue: #00aaff;
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
         }
-
-        * {
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark-bg);
+            color: #ffffff;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 170, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 170, 255, 0.05) 0%, transparent 20%);
         }
-
-        body {
-            background: var(--darker);
-            color: var(--light);
-            height: 100vh;
-            overflow: hidden;
+        
+        .card {
+            background: linear-gradient(135deg, var(--darker-bg), #1e1e1e);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 255, 170, 0.2);
+            max-width: 650px;
+            width: 90%;
             position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: transform 0.5s ease;
+            animation: cardGlow 8s infinite alternate;
         }
-
-        #vegas-bg {
-            position: fixed;
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-pink), var(--neon-green));
+            background-size: 400%;
+            z-index: -1;
+            border-radius: 16px;
+            opacity: 0;
+            transition: 0.5s;
+            animation: borderGlow 8s linear infinite;
+        }
+        
+        .card:hover::before {
+            opacity: 0.3;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, var(--neon-green), var(--neon-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+            letter-spacing: 3px;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+        
+        .title {
+            font-size: 1.3rem;
+            color: #aaaaaa;
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .title::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--neon-green), transparent);
+            bottom: -10px;
+            left: 25%;
+            animation: linePulse 3s infinite;
+        }
+        
+        .coming-soon {
+            font-size: 2rem;
+            margin: 40px 0;
+            color: #ffffff;
+            background: rgba(0, 20, 15, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--neon-green);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.1);
+            animation: pulse 2s infinite alternate;
+        }
+        
+        .coming-soon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin: 30px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: perspective(800px) rotateX(5deg);
+            transition: transform 0.5s ease;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+        }
+        
+        .video-container:hover {
+            transform: perspective(800px) rotateX(0deg) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 255, 170, 0.2);
+        }
+        
+        .video-container iframe {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2;
-            opacity: 0.7;
+            border: none;
         }
-
-        .container {
-            display: flex;
-            height: 100vh;
-            max-width: 1200px;
-            margin: 0 auto;
-            backdrop-filter: blur(12px);
-        }
-
-        .sidebar {
-            width: 90px;
-            background: var(--glass);
-            border-right: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 0;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 40px;
-            color: white;
-            font-weight: 700;
-            font-size: 18px;
-            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: rotate(15deg) scale(1.1);
-        }
-
-        .nav-item {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--light);
-            position: relative;
-            background: transparent;
-        }
-
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--primary), transparent);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .nav-item:hover::before {
-            opacity: 0.3;
-        }
-
-        .nav-item.active {
-            background: var(--glass-light);
-        }
-
-        .nav-item.active i {
-            color: var(--accent);
-        }
-
-        .nav-item i {
-            font-size: 20px;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
-        }
-
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .channel-name {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-        }
-
-        .channel-name::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 3px;
-        }
-
-        .status {
-            margin-left: 15px;
-            font-size: 14px;
-            color: var(--gray);
-            display: flex;
-            align-items: center;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 6px;
-        }
-
-        .status-dot.online {
-            background: var(--success);
-            box-shadow: 0 0 10px var(--success);
-            animation: pulse 2s infinite;
-        }
-
-        .status-dot.offline {
-            background: var(--danger);
-        }
-
-        .user-card {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .avatar-container {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        .avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
-            color: white;
-            font-weight: 700;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .avatar:hover {
-            transform: scale(1.05);
-        }
-
-        .avatar-ring {
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top-color: var(--accent);
-            border-right-color: var(--accent);
-            animation: rotate 6s linear infinite;
-        }
-
-        .status-indicator {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 3px solid var(--dark);
-            z-index: 2;
-        }
-
-        .status-indicator.online {
-            background: var(--success);
-            box-shadow: 0 0 15px var(--success);
-        }
-
-        .status-indicator.offline {
-            background: var(--danger);
-        }
-
-        .username {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            text-align: center;
-        }
-
-        .user-status {
-            font-size: 16px;
-            color: var(--gray);
-            text-align: center;
-            max-width: 300px;
-            line-height: 1.5;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto 30px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transform-style: preserve-3d;
-            transition: all 0.5s ease;
-        }
-
-        .video-container:hover {
-            transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        video {
-            width: 100%;
-            display: block;
-            background: var(--darker);
-        }
-
-        #remoteVideo {
-            transform: scaleX(-1);
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        
+        .social-links {
             margin-top: 40px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .control-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--glass-light);
             display: flex;
-            align-items: center;
             justify-content: center;
-            cursor: pointer;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .social-links a {
+            color: var(--neon-green);
+            text-decoration: none;
+            font-size: 1rem;
             transition: all 0.3s ease;
             position: relative;
+            padding: 8px 15px;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            border-radius: 5px;
+            background: rgba(0, 20, 15, 0.2);
             overflow: hidden;
-            border: none;
-            color: white;
         }
-
-        .control-btn::before {
+        
+        .social-links a:hover {
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.7);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+            transform: translateY(-3px);
+            background: rgba(0, 255, 170, 0.1);
+        }
+        
+        .social-links a::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, var(--primary), transparent);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .control-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .control-btn:hover::before {
-            opacity: 0.3;
-        }
-
-        .control-btn i {
-            font-size: 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .control-btn.active {
-            background: var(--primary);
-            box-shadow: 0 0 20px rgba(108, 92, 231, 0.7);
-        }
-
-        .control-btn.danger {
-            background: rgba(255, 61, 0, 0.2);
-        }
-
-        .control-btn.danger:hover {
-            background: var(--danger);
-        }
-
-        .call-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(10, 10, 31, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.5s ease;
-        }
-
-        .call-screen.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .call-card {
-            background: var(--glass);
-            border-radius: 25px;
-            padding: 40px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-            border: 1px solid var(--glass-border);
-        }
-
-        .call-screen.active .call-card {
-            transform: translateY(0);
-        }
-
-        .call-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: white;
-        }
-
-        .call-description {
-            font-size: 16px;
-            color: var(--gray);
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .call-id {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            border: 1px dashed var(--glass-border);
-        }
-
-        .call-id span {
-            margin-right: 10px;
-        }
-
-        .copy-btn {
-            background: transparent;
-            border: none;
-            color: var(--accent);
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .call-input {
+            left: -100%;
             width: 100%;
-            padding: 15px 20px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--glass-border);
-            color: white;
-            font-size: 16px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.2), transparent);
+            transition: 0.5s;
         }
-
-        .call-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
+        
+        .social-links a:hover::before {
+            left: 100%;
         }
-
-        .call-btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
-        }
-
-        .call-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.6);
-        }
-
-        .call-btn.secondary {
-            background: transparent;
-            border: 1px solid var(--glass-border);
-            box-shadow: none;
-        }
-
-        .call-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .settings-panel {
-            background: var(--glass);
-            border-radius: 20px;
-            padding: 25px;
-            margin-top: 20px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .settings-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--accent);
-        }
-
-        .settings-option {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .settings-option label {
-            margin-left: 10px;
-            font-size: 14px;
-        }
-
-        .vegas-badge {
+        
+        .easter-egg {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--glass-border);
-            z-index: 100;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(0, 255, 170, 0.1);
+            cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: transparent;
         }
-
-        .vegas-badge:hover {
-            background: rgba(108, 92, 231, 0.2);
-            transform: translateY(-3px);
+        
+        .easter-egg:hover {
+            background: rgba(0, 255, 170, 0.3);
+            color: var(--neon-green);
+            width: 80px;
+            border-radius: 15px;
         }
-
-        .vegas-badge i {
-            color: var(--accent);
-            margin-right: 10px;
+        
+        .hidden-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: var(--darker-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.5);
+            border: 1px solid var(--neon-green);
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.5s ease;
+            max-width: 300px;
+            text-align: center;
+        }
+        
+        .hidden-message.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: var(--neon-green);
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--neon-green);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 30px rgba(0, 255, 170, 0.4);
+            }
+        }
+        
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(0, 255, 170, 0.7);
+            }
+        }
+        
+        @keyframes linePulse {
+            0% {
+                width: 50%;
+                left: 25%;
+            }
+            50% {
+                width: 70%;
+                left: 15%;
+            }
+            100% {
+                width: 50%;
+                left: 25%;
+            }
+        }
+        
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+            20% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+        
+        @keyframes borderGlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        @keyframes cardGlow {
+            0% {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 170, 0.1);
+            }
+            50% {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 170, 255, 0.2);
+            }
+            100% {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 0, 170, 0.1);
+            }
+        }
+        
+        /* Audio player styles */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 255, 170, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .audio-player:hover {
+            background: rgba(0, 255, 170, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .audio-player i {
+            color: var(--neon-green);
             font-size: 18px;
         }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.7; }
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .hidden {
+        
+        .audio-controls {
+            position: fixed;
+            bottom: 70px;
+            left: 20px;
+            background: rgba(10, 10, 10, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--neon-green);
             display: none;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
         }
-
-        .blink {
-            animation: pulse 1.5s infinite;
+        
+        .audio-controls.show {
+            display: flex;
         }
-
-        .float {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-                padding: 20px 0;
-            }
-            
-            .main {
-                padding: 20px;
-            }
-            
-            .avatar {
-                width: 120px;
-                height: 120px;
-                font-size: 36px;
-            }
-            
-            .controls {
-                gap: 15px;
-            }
-            
-            .control-btn {
-                width: 50px;
-                height: 50px;
-            }
+        
+        .volume-control {
+            width: 100%;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div id="vegas-bg"></div>
-
-    <div class="container">
-        <div class="sidebar">
-            <div class="logo">PX</div>
-            <div class="nav-item active" id="callTab">
-                <i class="fas fa-phone-alt"></i>
-            </div>
-            <div class="nav-item" id="contactsTab">
-                <i class="fas fa-user-friends"></i>
-            </div>
-            <div class="nav-item" id="settingsTab">
-                <i class="fas fa-cog"></i>
-            </div>
+    <div class="particles" id="particles"></div>
+    
+    <div class="card">
+        <h1>M.VEGAS</h1>
+        <div class="title">WEB DEVELOPER</div>
+        
+        <div class="coming-soon">СКОРО ЧТО-ТО БУДЕТ...</div>
+        
+        <div class="video-container">
+            <iframe src="https://yandex.by/video/embed/8573301146534963935" frameborder="0" allowfullscreen></iframe>
         </div>
-
-        <div class="main">
-            <div id="callScreen">
-                <div class="header">
-                    <div class="channel-name">Голосовой вызов</div>
-                    <div class="status">
-                        <div class="status-dot offline" id="connectionDot"></div>
-                        <span id="callStatus">Отключено</span>
-                    </div>
-                </div>
-
-                <div class="video-container hidden" id="videoContainer">
-                    <video id="remoteVideo" autoplay playsinline></video>
-                </div>
-
-                <div class="user-card">
-                    <div class="avatar-container float">
-                        <div class="avatar" id="userAvatar">
-                            <div class="avatar-ring"></div>
-                        </div>
-                        <div class="status-indicator offline" id="userStatus"></div>
-                    </div>
-                    
-                    <h2 class="username" id="userName">Не подключено</h2>
-                    <div class="user-status" id="connectionStatus">Ожидание подключения</div>
-                </div>
-
-                <div class="controls">
-                    <button class="control-btn" id="muteBtn">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                    <button class="control-btn" id="videoBtn">
-                        <i class="fas fa-video"></i>
-                    </button>
-                    <button class="control-btn danger" id="hangupBtn">
-                        <i class="fas fa-phone-slash"></i>
-                    </button>
-                    <button class="control-btn" id="effectsBtn">
-                        <i class="fas fa-magic"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div id="settingsScreen" class="hidden">
-                <h2 class="channel-name">Настройки</h2>
-                
-                <div class="settings-panel">
-                    <h3 class="settings-title">Аудио</h3>
-                    
-                    <div class="settings-option">
-                        <input type="checkbox" id="noiseSuppression" checked>
-                        <label for="noiseSuppression">Подавление шума</label>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <input type="checkbox" id="echoCancellation" checked>
-                        <label for="echoCancellation">Эхоподавление</label>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <label for="inputDevice">Микрофон:</label>
-                        <select id="inputDevice" class="call-input">
-                            <option value="default">По умолчанию</option>
-                        </select>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <label for="outputDevice">Динамики:</label>
-                        <select id="outputDevice" class="call-input">
-                            <option value="default">По умолчанию</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="settings-panel">
-                    <h3 class="settings-title">Видео</h3>
-                    
-                    <div class="settings-option">
-                        <input type="checkbox" id="hdVideo" checked>
-                        <label for="hdVideo">HD качество</label>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <label for="cameraDevice">Камера:</label>
-                        <select id="cameraDevice" class="call-input">
-                            <option value="default">По умолчанию</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="settings-panel">
-                    <h3 class="settings-title">Эффекты</h3>
-                    
-                    <div class="settings-option">
-                        <label for="voiceEffect">Эффект голоса:</label>
-                        <select id="voiceEffect" class="call-input">
-                            <option value="none">Нет</option>
-                            <option value="robot">Робот</option>
-                            <option value="echo">Эхо</option>
-                            <option value="radio">Рация</option>
-                        </select>
-                    </div>
-                    
-                    <div class="settings-option">
-                        <label for="backgroundEffect">Фон:</label>
-                        <select id="backgroundEffect" class="call-input">
-                            <option value="none">Нет</option>
-                            <option value="blur">Размытие</option>
-                            <option value="virtual">Виртуальный</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+        
+        <div class="social-links">
+            <a href="#"><i class="fas fa-briefcase"></i> PORTFOLIO</a>
+            <a href="#"><i class="fab fa-github"></i> GITHUB</a>
+            <a href="#"><i class="fas fa-envelope"></i> CONTACT</a>
+            <a href="#" id="secret-btn"><i class="fas fa-star"></i> SECRET</a>
         </div>
     </div>
-
-    <div class="call-screen" id="callScreenSetup">
-        <div class="call-card">
-            <h2 class="call-title">Project X</h2>
-            <p class="call-description">Премиум голосовой чат с кристально чистым звуком</p>
-            
-            <div class="hidden" id="callIdContainer">
-                <p class="call-description">Ваш ID для подключения:</p>
-                <div class="call-id">
-                    <span id="callIdDisplay">PX-8A5F2D</span>
-                    <button class="copy-btn" id="copyCallIdBtn">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                </div>
-                <button class="call-btn" id="startCallBtn">
-                    <i class="fas fa-phone-alt"></i> Начать вызов
-                </button>
-            </div>
-            
-            <div id="joinCallContainer">
-                <input type="text" class="call-input" id="callIdInput" placeholder="Введите ID вызова">
-                <button class="call-btn" id="joinCallBtn">
-                    <i class="fas fa-phone-volume"></i> Присоединиться
-                </button>
-                <button class="call-btn secondary" id="createCallBtn">
-                    <i class="fas fa-plus"></i> Создать новый вызов
-                </button>
-            </div>
-        </div>
+    
+    <div class="easter-egg" id="easter-egg" title="Нажми меня!">?</div>
+    
+    <div class="hidden-message" id="hidden-message">
+        <span class="close-btn" id="close-btn"><i class="fas fa-times"></i></span>
+        <h3>Пасхалка!</h3>
+        <p>Ты нашел секретное сообщение! 🎉</p>
+        <p>M.Vegas - это не просто ник, это стиль жизни!</p>
+        <small>Попробуй нажать на SECRET внизу</small>
     </div>
-
-    <div class="vegas-badge">
-        <i class="fas fa-crown"></i>
-        <span>Vegas+ Experience</span>
+    
+    <!-- Audio Player -->
+    <div class="audio-player" id="audio-player">
+        <i class="fas fa-music"></i>
     </div>
-
+    
+    <div class="audio-controls" id="audio-controls">
+        <audio id="bg-music" loop>
+            <source src="love.mp3" type="audio/mpeg">
+        </audio>
+        <input type="range" class="volume-control" id="volume-control" min="0" max="1" step="0.1" value="0.5">
+        <button id="play-pause-btn"><i class="fas fa-play"></i> Play</button>
+    </div>
+    
     <script>
-        // Инициализация Vegas фона
-        document.addEventListener('DOMContentLoaded', function() {
-            vegas({
-                el: '#vegas-bg',
-                slides: [
-                    { src: 'https://source.unsplash.com/random/1920x1080?neon,lights' },
-                    { src: 'https://source.unsplash.com/random/1920x1080?cyberpunk,future' },
-                    { src: 'https://source.unsplash.com/random/1920x1080?abstract,blue' }
-                ],
-                transition: 'blur',
-                delay: 6000,
-                animation: 'kenburns'
-            });
-
-            // Элементы интерфейса
-            const callScreen = document.getElementById('callScreen');
-            const settingsScreen = document.getElementById('settingsScreen');
-            const callTab = document.getElementById('callTab');
-            const contactsTab = document.getElementById('contactsTab');
-            const settingsTab = document.getElementById('settingsTab');
-            const callScreenSetup = document.getElementById('callScreenSetup');
-            const callIdContainer = document.getElementById('callIdContainer');
-            const joinCallContainer = document.getElementById('joinCallContainer');
-            const callIdDisplay = document.getElementById('callIdDisplay');
-            const callIdInput = document.getElementById('callIdInput');
-            const createCallBtn = document.getElementById('createCallBtn');
-            const joinCallBtn = document.getElementById('joinCallBtn');
-            const startCallBtn = document.getElementById('startCallBtn');
-            const copyCallIdBtn = document.getElementById('copyCallIdBtn');
-            const muteBtn = document.getElementById('muteBtn');
-            const videoBtn = document.getElementById('videoBtn');
-            const hangupBtn = document.getElementById('hangupBtn');
-            const effectsBtn = document.getElementById('effectsBtn');
-            const userAvatar = document.getElementById('userAvatar');
-            const userName = document.getElementById('userName');
-            const connectionStatus = document.getElementById('connectionStatus');
-            const userStatus = document.getElementById('userStatus');
-            const connectionDot = document.getElementById('connectionDot');
-            const callStatus = document.getElementById('callStatus');
-            const videoContainer = document.getElementById('videoContainer');
-            const remoteVideo = document.getElementById('remoteVideo');
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
             
-            // Состояние приложения
-            let callTimer;
-            let callSeconds = 0;
-            let isMuted = false;
-            let isVideoOn = false;
-            let currentCallId = '';
-            let localStream;
-            let remoteStream;
-
-            // Показать экран настройки вызова
-            callScreenSetup.classList.add('active');
-
-            // Обработчики кнопок управления (добавлены сразу)
-            muteBtn.addEventListener('click', () => {
-                if (!localStream) return;
-                isMuted = !isMuted;
-                localStream.getAudioTracks().forEach(track => {
-                    track.enabled = !isMuted;
-                });
-                muteBtn.classList.toggle('active', isMuted);
-                muteBtn.innerHTML = isMuted 
-                    ? '<i class="fas fa-microphone-slash"></i>' 
-                    : '<i class="fas fa-microphone"></i>';
-            });
-
-            videoBtn.addEventListener('click', () => {
-                if (!localStream) return;
-                isVideoOn = !isVideoOn;
-                videoBtn.classList.toggle('active', isVideoOn);
-            });
-
-            hangupBtn.addEventListener('click', endCall);
-
-            // Переключение между вкладками
-            callTab.addEventListener('click', () => {
-                callScreen.classList.remove('hidden');
-                settingsScreen.classList.add('hidden');
-                callTab.classList.add('active');
-                contactsTab.classList.remove('active');
-                settingsTab.classList.remove('active');
-            });
-
-            settingsTab.addEventListener('click', () => {
-                callScreen.classList.add('hidden');
-                settingsScreen.classList.remove('hidden');
-                callTab.classList.remove('active');
-                settingsTab.classList.add('active');
-            });
-
-            // Генерация случайного ID
-            function generateCallId() {
-                const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-                const numbers = '23456789';
-                let id = 'PX-';
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
                 
-                for (let i = 0; i < 3; i++) {
-                    id += letters.charAt(Math.floor(Math.random() * letters.length));
-                }
+                const size = Math.random() * 10 + 5;
+                const posX = Math.random() * 100;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 10;
                 
-                for (let i = 0; i < 2; i++) {
-                    id += numbers.charAt(Math.floor(Math.random() * numbers.length));
-                }
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.bottom = `-${size}px`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
                 
-                return id;
+                particlesContainer.appendChild(particle);
             }
-
-            // Создание вызова
-            createCallBtn.addEventListener('click', () => {
-                currentCallId = generateCallId();
-                callIdDisplay.textContent = currentCallId;
-                joinCallContainer.classList.add('hidden');
-                callIdContainer.classList.remove('hidden');
-            });
-
-            // Копирование ID
-            copyCallIdBtn.addEventListener('click', () => {
-                navigator.clipboard.writeText(currentCallId);
-                copyCallIdBtn.innerHTML = '<i class="fas fa-check"></i>';
-                setTimeout(() => {
-                    copyCallIdBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                }, 2000);
-            });
-
-            // Начать вызов
-            startCallBtn.addEventListener('click', async () => {
-                try {
-                    // Запрос доступа к микрофону
-                    localStream = await navigator.mediaDevices.getUserMedia({ 
-                        audio: true,
-                        video: false 
-                    });
-                    
-                    // Настройка UI
-                    callScreenSetup.classList.remove('active');
-                    userAvatar.textContent = 'ИП';
-                    userName.textContent = 'Иван Петров';
-                    connectionStatus.textContent = 'Ожидание подключения...';
-                    
-                    // Имитация подключения
-                    setTimeout(() => {
-                        userStatus.classList.remove('offline');
-                        userStatus.classList.add('online');
-                        connectionDot.classList.remove('offline');
-                        connectionDot.classList.add('online');
-                        callStatus.textContent = 'В сети • 00:00';
-                        connectionStatus.textContent = 'Говорит';
-                        videoContainer.classList.remove('hidden');
-                        
-                        // Таймер звонка
-                        startCallTimer();
-                        
-                        // Имитация видео потока
-                        remoteVideo.srcObject = new MediaStream();
-                    }, 1500);
-                } catch (error) {
-                    console.error('Ошибка доступа к медиаустройствам:', error);
-                    alert('Не удалось получить доступ к микрофону. Пожалуйста, проверьте разрешения.');
-                }
-            });
-
-            // Присоединиться к вызову
-            joinCallBtn.addEventListener('click', async () => {
-                const callId = callIdInput.value.trim();
-                if (!callId) {
-                    alert('Пожалуйста, введите ID вызова');
-                    return;
-                }
-                
-                try {
-                    // Запрос доступа к микрофону
-                    localStream = await navigator.mediaDevices.getUserMedia({ 
-                        audio: true,
-                        video: false 
-                    });
-                    
-                    // Настройка UI
-                    callScreenSetup.classList.remove('active');
-                    userAvatar.textContent = 'АС';
-                    userName.textContent = 'Алексей Смирнов';
-                    connectionStatus.textContent = 'Подключение...';
-                    
-                    // Имитация подключения
-                    setTimeout(() => {
-                        userStatus.classList.remove('offline');
-                        userStatus.classList.add('online');
-                        connectionDot.classList.remove('offline');
-                        connectionDot.classList.add('online');
-                        callStatus.textContent = 'В сети • 00:00';
-                        connectionStatus.textContent = 'Говорит';
-                        videoContainer.classList.remove('hidden');
-                        
-                        // Таймер звонка
-                        startCallTimer();
-                        
-                        // Имитация видео потока
-                        remoteVideo.srcObject = new MediaStream();
-                    }, 1500);
-                } catch (error) {
-                    console.error('Ошибка доступа к медиаустройствам:', error);
-                    alert('Не удалось получить доступ к микрофону. Пожалуйста, проверьте разрешения.');
-                }
-            });
-
-            // Запуск таймера звонка
-            function startCallTimer() {
-                callSeconds = 0;
-                clearInterval(callTimer);
-                callTimer = setInterval(() => {
-                    callSeconds++;
-                    const minutes = Math.floor(callSeconds / 60);
-                    const secs = callSeconds % 60;
-                    callStatus.textContent = `В сети • ${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                }, 1000);
+        }
+        
+        // Easter egg functionality
+        document.getElementById('easter-egg').addEventListener('click', function() {
+            document.getElementById('hidden-message').classList.add('show');
+        });
+        
+        document.getElementById('close-btn').addEventListener('click', function() {
+            document.getElementById('hidden-message').classList.remove('show');
+        });
+        
+        // Secret button
+        document.getElementById('secret-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Ты нашел секретную кнопку! 🚀\n\nСледи за обновлениями, скоро будет что-то крутое!');
+        });
+        
+        // Audio player functionality
+        const audioPlayer = document.getElementById('audio-player');
+        const audioControls = document.getElementById('audio-controls');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const volumeControl = document.getElementById('volume-control');
+        const bgMusic = document.getElementById('bg-music');
+        
+        let isMusicPlaying = false;
+        
+        audioPlayer.addEventListener('click', function() {
+            audioControls.classList.toggle('show');
+        });
+        
+        playPauseBtn.addEventListener('click', function() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Play';
+            } else {
+                bgMusic.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
             }
-
-            // Завершение вызова
-            function endCall() {
-                // Остановка таймера
-                clearInterval(callTimer);
-                
-                // Остановка медиапотоков
-                if (localStream) {
-                    localStream.getTracks().forEach(track => track.stop());
-                    localStream = null;
+            isMusicPlaying = !isMusicPlaying;
+        });
+        
+        volumeControl.addEventListener('input', function() {
+            bgMusic.volume = this.value;
+        });
+        
+        // Initialize
+        window.onload = function() {
+            createParticles();
+            
+            // Start music automatically (but muted)
+            bgMusic.volume = 0.3;
+            // Uncomment to autoplay (may be blocked by browser)
+            // bgMusic.play().catch(e => console.log('Autoplay prevented:', e));
+        };
+        
+        // Konami code easter egg
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    // Konami code completed
+                    document.body.style.background = 'linear-gradient(135deg, #ff00aa, #00ffaa, #00aaff)';
+                    setTimeout(() => {
+                        document.body.style.background = '';
+                    }, 1000);
+                    konamiIndex = 0;
                 }
-                
-                if (remoteVideo.srcObject) {
-                    remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-                    remoteVideo.srcObject = null;
-                }
-                
-                // Сброс UI
-                callScreenSetup.classList.add('active');
-                joinCallContainer.classList.remove('hidden');
-                callIdContainer.classList.add('hidden');
-                userStatus.classList.remove('online');
-                userStatus.classList.add('offline');
-                connectionDot.classList.remove('online');
-                connectionDot.classList.add('offline');
-                callStatus.textContent = 'Отключено';
-                userName.textContent = 'Не подключено';
-                connectionStatus.textContent = 'Ожидание подключения';
-                videoContainer.classList.add('hidden');
-                
-                // Сброс состояния
-                isMuted = false;
-                isVideoOn = false;
-                currentCallId = '';
-                muteBtn.classList.remove('active');
-                videoBtn.classList.remove('active');
-                muteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            } else {
+                konamiIndex = 0;
             }
         });
     </script>
