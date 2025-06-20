@@ -6,11 +6,13 @@
     <title>M.Vegas - Web Developer</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         
         :root {
             --neon-green: #00ffaa;
             --neon-pink: #ff00aa;
             --neon-blue: #00aaff;
+            --neon-purple: #aa00ff;
             --dark-bg: #121212;
             --darker-bg: #0a0a0a;
         }
@@ -29,7 +31,8 @@
             overflow-x: hidden;
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(0, 255, 170, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(0, 170, 255, 0.05) 0%, transparent 20%);
+                radial-gradient(circle at 90% 80%, rgba(0, 170, 255, 0.05) 0%, transparent 20%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="20" font-family="Arial" font-size="10" fill="rgba(0,255,170,0.03)">M.VEGAS</text></svg>');
         }
         
         .card {
@@ -39,17 +42,19 @@
             box-shadow: 
                 0 10px 25px rgba(0, 0, 0, 0.5),
                 0 0 30px rgba(0, 255, 170, 0.2);
-            max-width: 650px;
+            max-width: 800px;
             width: 90%;
             position: relative;
             overflow: hidden;
             z-index: 1;
             transition: transform 0.5s ease;
             animation: cardGlow 8s infinite alternate;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 255, 170, 0.1);
         }
         
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) rotate(0.5deg);
         }
         
         .card::before {
@@ -59,7 +64,7 @@
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-pink), var(--neon-green));
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-pink), var(--neon-purple), var(--neon-green));
             background-size: 400%;
             z-index: -1;
             border-radius: 16px;
@@ -74,25 +79,41 @@
         
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
+            font-size: 4rem;
             margin-bottom: 5px;
-            background: linear-gradient(to right, var(--neon-green), var(--neon-blue));
+            background: linear-gradient(to right, var(--neon-green), var(--neon-blue), var(--neon-pink));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
-            letter-spacing: 3px;
+            letter-spacing: 5px;
             animation: textGlow 2s ease-in-out infinite alternate;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            bottom: -10px;
+            left: 0;
+            background: linear-gradient(to right, transparent, var(--neon-green), var(--neon-blue), transparent);
+            border-radius: 100%;
+            filter: blur(2px);
+            animation: rainbowLine 3s linear infinite;
         }
         
         .title {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: #aaaaaa;
-            margin-bottom: 30px;
+            margin: 30px 0;
             font-weight: 300;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             position: relative;
             display: inline-block;
+            text-transform: uppercase;
         }
         
         .title::after {
@@ -101,23 +122,25 @@
             width: 50%;
             height: 2px;
             background: linear-gradient(to right, transparent, var(--neon-green), transparent);
-            bottom: -10px;
+            bottom: -15px;
             left: 25%;
             animation: linePulse 3s infinite;
         }
         
         .coming-soon {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin: 40px 0;
             color: #ffffff;
             background: rgba(0, 20, 15, 0.3);
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
             border: 1px solid var(--neon-green);
             position: relative;
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 255, 170, 0.1);
-            animation: pulse 2s infinite alternate;
+            animation: pulse 2s infinite alternate, rainbowBorder 6s linear infinite;
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
         }
         
         .coming-soon::before {
@@ -136,25 +159,27 @@
             padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
-            margin: 30px 0;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transform: perspective(800px) rotateX(5deg);
-            transition: transform 0.5s ease;
-            border: 1px solid rgba(0, 255, 170, 0.3);
+            margin: 40px 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            border: 2px solid rgba(0, 255, 170, 0.5);
+            background: #000;
         }
         
         .video-container:hover {
-            transform: perspective(800px) rotateX(0deg) scale(1.02);
-            box-shadow: 0 10px 25px rgba(0, 255, 170, 0.2);
+            transform: perspective(1000px) rotateX(0deg) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 255, 170, 0.3);
         }
         
-        .video-container iframe {
+        .video-container video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            object-fit: cover;
             border: none;
         }
         
@@ -162,28 +187,30 @@
             margin-top: 40px;
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
             gap: 20px;
         }
         
         .social-links a {
             color: var(--neon-green);
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 1.2rem;
             transition: all 0.3s ease;
             position: relative;
-            padding: 8px 15px;
-            border: 1px solid rgba(0, 255, 170, 0.3);
-            border-radius: 5px;
-            background: rgba(0, 20, 15, 0.2);
+            padding: 12px 25px;
+            border: 1px solid rgba(0, 255, 170, 0.5);
+            border-radius: 50px;
+            background: rgba(0, 20, 15, 0.3);
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .social-links a:hover {
-            text-shadow: 0 0 10px rgba(0, 255, 170, 0.7);
-            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
-            transform: translateY(-3px);
-            background: rgba(0, 255, 170, 0.1);
+            text-shadow: 0 0 15px rgba(0, 255, 170, 0.8);
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.4);
+            transform: translateY(-5px);
+            background: rgba(0, 255, 170, 0.2);
         }
         
         .social-links a::before {
@@ -193,7 +220,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 170, 0.3), transparent);
             transition: 0.5s;
         }
         
@@ -201,102 +228,185 @@
             left: 100%;
         }
         
-        .easter-egg {
+        /* Pet animations */
+        .pet {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.7;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 170, 0.5));
+            animation: floatPet linear infinite;
+        }
+        
+        .cat {
+            width: 80px;
+            height: 80px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M85,40c0,11-11,20-25,20c-2,0-4-0.2-6-0.6c-1.7,9.5-9.8,16.6-19,16.6c-10.5,0-19-8.5-19-19s8.5-19,19-19 c4.9,0,9.4,1.9,12.8,5c2.5-1.2,5.3-1.9,8.2-1.9C74,20,85,29,85,40z" fill="%2300ffaa"/><circle cx="70" cy="35" r="5" fill="%23121212"/><circle cx="50" cy="35" r="5" fill="%23121212"/><path d="M60,50c0,0-5,5-10,5s-10-5-10-5" stroke="%23121212" stroke-width="3" fill="none"/></svg>') no-repeat;
+        }
+        
+        .dog {
+            width: 100px;
+            height: 80px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M90,40c0,11-11,20-25,20c-2,0-4-0.2-6-0.6c-1.7,9.5-9.8,16.6-19,16.6c-10.5,0-19-8.5-19-19s8.5-19,19-19 c4.9,0,9.4,1.9,12.8,5c2.5-1.2,5.3-1.9,8.2-1.9C79,20,90,29,90,40z" fill="%2300aaff"/><circle cx="75" cy="35" r="5" fill="%23121212"/><circle cx="55" cy="35" r="5" fill="%23121212"/><path d="M65,50c0,0-5,5-10,5s-10-5-10-5" stroke="%23121212" stroke-width="3" fill="none"/><path d="M40,30l-10-10 M40,40l-10,10" stroke="%2300aaff" stroke-width="4"/></svg>') no-repeat;
+        }
+        
+        /* Audio player styles */
+        .audio-player {
             position: fixed;
             bottom: 20px;
-            right: 20px;
-            width: 30px;
-            height: 30px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: rgba(0, 255, 170, 0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: rgba(0, 255, 170, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 12px;
-            color: transparent;
-        }
-        
-        .easter-egg:hover {
-            background: rgba(0, 255, 170, 0.3);
-            color: var(--neon-green);
-            width: 80px;
-            border-radius: 15px;
-        }
-        
-        .hidden-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: var(--darker-bg);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 255, 170, 0.5);
-            border: 1px solid var(--neon-green);
-            z-index: 100;
-            opacity: 0;
-            transition: all 0.5s ease;
-            max-width: 300px;
-            text-align: center;
-        }
-        
-        .hidden-message.show {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-        }
-        
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.2);
+        }
+        
+        .audio-player:hover {
+            background: rgba(0, 255, 170, 0.4);
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 25px rgba(0, 255, 170, 0.4);
+        }
+        
+        .audio-player i {
             color: var(--neon-green);
+            font-size: 20px;
+            transition: all 0.3s ease;
         }
         
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .audio-player:hover i {
+            transform: scale(1.2);
+        }
+        
+        .audio-controls {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--neon-green);
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .audio-controls.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .volume-control {
             width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
+            -webkit-appearance: none;
+            height: 5px;
+            background: rgba(0, 255, 170, 0.2);
+            border-radius: 5px;
+            outline: none;
         }
         
-        .particle {
-            position: absolute;
-            background: var(--neon-green);
+        .volume-control::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
             border-radius: 50%;
-            opacity: 0.5;
-            animation: float linear infinite;
+            background: var(--neon-green);
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
         }
         
-        @keyframes float {
+        #play-pause-btn {
+            background: rgba(0, 255, 170, 0.1);
+            border: 1px solid var(--neon-green);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        #play-pause-btn:hover {
+            background: rgba(0, 255, 170, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Animations */
+        @keyframes floatPet {
             0% {
                 transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
             }
             100% {
                 transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
             }
         }
         
         @keyframes pulse {
             0% {
                 box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
+                transform: scale(1);
             }
             100% {
                 box-shadow: 0 0 30px rgba(0, 255, 170, 0.4);
+                transform: scale(1.02);
             }
         }
         
         @keyframes textGlow {
             0% {
                 text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+                background-position: 0% 50%;
             }
             100% {
                 text-shadow: 0 0 20px rgba(0, 255, 170, 0.7);
+                background-position: 100% 50%;
+            }
+        }
+        
+        @keyframes rainbowLine {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        @keyframes rainbowBorder {
+            0% {
+                border-color: var(--neon-green);
+            }
+            25% {
+                border-color: var(--neon-blue);
+            }
+            50% {
+                border-color: var(--neon-pink);
+            }
+            75% {
+                border-color: var(--neon-purple);
+            }
+            100% {
+                border-color: var(--neon-green);
             }
         }
         
@@ -351,59 +461,37 @@
             }
         }
         
-        /* Audio player styles */
-        .audio-player {
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Retro game overlay */
+        .retro-overlay {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(0, 255, 170, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
-        }
-        
-        .audio-player:hover {
-            background: rgba(0, 255, 170, 0.4);
-            transform: scale(1.1);
-        }
-        
-        .audio-player i {
-            color: var(--neon-green);
-            font-size: 18px;
-        }
-        
-        .audio-controls {
-            position: fixed;
-            bottom: 70px;
-            left: 20px;
-            background: rgba(10, 10, 10, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid var(--neon-green);
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 10;
-        }
-        
-        .audio-controls.show {
-            display: flex;
-        }
-        
-        .volume-control {
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 255, 170, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.5;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="particles" id="particles"></div>
+    <div class="retro-overlay"></div>
     
     <div class="card">
         <h1>M.VEGAS</h1>
@@ -412,25 +500,15 @@
         <div class="coming-soon">СКОРО ЧТО-ТО БУДЕТ...</div>
         
         <div class="video-container">
-            <iframe src="https://yandex.by/video/embed/8573301146534963935" frameborder="0" allowfullscreen></iframe>
+            <video id="local-video" autoplay loop muted>
+                <source src="vlove.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
         
         <div class="social-links">
-            <a href="#"><i class="fas fa-briefcase"></i> PORTFOLIO</a>
-            <a href="#"><i class="fab fa-github"></i> GITHUB</a>
-            <a href="#"><i class="fas fa-envelope"></i> CONTACT</a>
-            <a href="#" id="secret-btn"><i class="fas fa-star"></i> SECRET</a>
+            <a href="https://github.com/m-vegas" target="_blank"><i class="fab fa-github"></i> GITHUB</a>
         </div>
-    </div>
-    
-    <div class="easter-egg" id="easter-egg" title="Нажми меня!">?</div>
-    
-    <div class="hidden-message" id="hidden-message">
-        <span class="close-btn" id="close-btn"><i class="fas fa-times"></i></span>
-        <h3>Пасхалка!</h3>
-        <p>Ты нашел секретное сообщение! 🎉</p>
-        <p>M.Vegas - это не просто ник, это стиль жизни!</p>
-        <small>Попробуй нажать на SECRET внизу</small>
     </div>
     
     <!-- Audio Player -->
@@ -447,46 +525,33 @@
     </div>
     
     <script>
-        // Create particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
+        // Create floating pets
+        function createPets() {
+            const petTypes = ['cat', 'dog'];
+            const colors = ['#00ffaa', '#00aaff', '#ff00aa', '#aa00ff'];
             
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
+            for (let i = 0; i < 10; i++) {
+                const pet = document.createElement('div');
+                const type = petTypes[Math.floor(Math.random() * petTypes.length)];
+                pet.className = `pet ${type}`;
                 
-                const size = Math.random() * 10 + 5;
+                const size = Math.random() * 30 + 50;
                 const posX = Math.random() * 100;
-                const duration = Math.random() * 20 + 10;
-                const delay = Math.random() * 10;
+                const duration = Math.random() * 20 + 20;
+                const delay = Math.random() * 15;
+                const rotation = Math.random() * 360;
                 
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${posX}%`;
-                particle.style.bottom = `-${size}px`;
-                particle.style.animationDuration = `${duration}s`;
-                particle.style.animationDelay = `${delay}s`;
-                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                pet.style.width = `${size}px`;
+                pet.style.height = `${size}px`;
+                pet.style.left = `${posX}%`;
+                pet.style.bottom = `-${size}px`;
+                pet.style.animationDuration = `${duration}s`;
+                pet.style.animationDelay = `${delay}s`;
+                pet.style.filter = `drop-shadow(0 0 5px ${colors[Math.floor(Math.random() * colors.length)]})`;
                 
-                particlesContainer.appendChild(particle);
+                document.body.appendChild(pet);
             }
         }
-        
-        // Easter egg functionality
-        document.getElementById('easter-egg').addEventListener('click', function() {
-            document.getElementById('hidden-message').classList.add('show');
-        });
-        
-        document.getElementById('close-btn').addEventListener('click', function() {
-            document.getElementById('hidden-message').classList.remove('show');
-        });
-        
-        // Secret button
-        document.getElementById('secret-btn').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Ты нашел секретную кнопку! 🚀\n\nСледи за обновлениями, скоро будет что-то крутое!');
-        });
         
         // Audio player functionality
         const audioPlayer = document.getElementById('audio-player');
@@ -494,6 +559,7 @@
         const playPauseBtn = document.getElementById('play-pause-btn');
         const volumeControl = document.getElementById('volume-control');
         const bgMusic = document.getElementById('bg-music');
+        const localVideo = document.getElementById('local-video');
         
         let isMusicPlaying = false;
         
@@ -506,44 +572,68 @@
                 bgMusic.pause();
                 playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Play';
             } else {
-                bgMusic.play();
-                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                bgMusic.play()
+                    .then(() => {
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                        localVideo.muted = false;
+                    })
+                    .catch(e => console.log('Playback prevented:', e));
             }
             isMusicPlaying = !isMusicPlaying;
         });
         
         volumeControl.addEventListener('input', function() {
             bgMusic.volume = this.value;
+            localVideo.volume = this.value;
         });
         
         // Initialize
         window.onload = function() {
-            createParticles();
+            createPets();
             
             // Start music automatically (but muted)
             bgMusic.volume = 0.3;
-            // Uncomment to autoplay (may be blocked by browser)
-            // bgMusic.play().catch(e => console.log('Autoplay prevented:', e));
+            localVideo.volume = 0;
+            
+            // Try autoplay (may be blocked by browser)
+            const playPromise = bgMusic.play();
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(_ => {
+                        isMusicPlaying = true;
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                    })
+                    .catch(error => {
+                        console.log('Autoplay prevented, showing play button');
+                    });
+            }
         };
         
-        // Konami code easter egg
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        let konamiIndex = 0;
+        // Easter egg - click logo to change colors
+        const logo = document.querySelector('h1');
+        const colors = ['#00ffaa', '#00aaff', '#ff00aa', '#aa00ff', '#ffaa00'];
+        let colorIndex = 0;
         
-        document.addEventListener('keydown', function(e) {
-            if (e.key === konamiCode[konamiIndex]) {
-                konamiIndex++;
-                if (konamiIndex === konamiCode.length) {
-                    // Konami code completed
-                    document.body.style.background = 'linear-gradient(135deg, #ff00aa, #00ffaa, #00aaff)';
-                    setTimeout(() => {
-                        document.body.style.background = '';
-                    }, 1000);
-                    konamiIndex = 0;
-                }
-            } else {
-                konamiIndex = 0;
-            }
+        logo.addEventListener('click', function() {
+            colorIndex = (colorIndex + 1) % colors.length;
+            document.documentElement.style.setProperty('--neon-green', colors[colorIndex]);
+            document.documentElement.style.setProperty('--neon-blue', colors[(colorIndex + 1) % colors.length]);
+            document.documentElement.style.setProperty('--neon-pink', colors[(colorIndex + 2) % colors.length]);
+            document.documentElement.style.setProperty('--neon-purple', colors[(colorIndex + 3) % colors.length]);
+        });
+        
+        // Make pets follow mouse on mousemove
+        document.addEventListener('mousemove', function(e) {
+            const pets = document.querySelectorAll('.pet');
+            pets.forEach(pet => {
+                const rect = pet.getBoundingClientRect();
+                const petX = rect.left + rect.width / 2;
+                const petY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(e.clientY - petY, e.clientX - petX) * 180 / Math.PI;
+                pet.style.transform = `rotate(${angle + 90}deg)`;
+            });
         });
     </script>
 </body>
