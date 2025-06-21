@@ -881,16 +881,20 @@
     setInterval(createPet, 10000);
 
     // YouTube video control
-    const youtubeVideo = document.getElementById('youtube-video');
-    const videoContainer = document.querySelector('.video-container');
+const youtubeVideo = document.getElementById('youtube-video');
+const videoContainer = document.querySelector('.video-container');
+let isPlaying = false;
 
-    videoContainer.addEventListener('mouseenter', () => {
-        youtubeVideo.src += '&autoplay=1';
-    });
+videoContainer.addEventListener('mouseenter', () => {
+    if (!isPlaying) {
+        youtubeVideo.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        isPlaying = true;
+    }
+});
 
-    videoContainer.addEventListener('mouseleave', () => {
-        youtubeVideo.src = youtubeVideo.src.replace('&autoplay=1', '');
-    });
-</script>
-    </body> </html>
-    
+videoContainer.addEventListener('mouseleave', () => {
+    if (isPlaying) {
+        youtubeVideo.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        isPlaying = false;
+    }
+});
