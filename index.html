@@ -784,145 +784,113 @@
             </a>
         </div>
     </div>
+    
     <!-- Audio Player -->
     <div class="audio-player" id="audio-player">
         <i class="fas fa-music"></i>
     </div>
-    
     <div class="audio-controls" id="audio-controls">
-        <audio id="bg-music" loop>
-            <source src="love.mp3" type="audio/mpeg">
-        </audio>
-        <input type="range" class="volume-control" id="volume-control" min="0" max="1" step="0.1" value="0.5">
-        <button id="play-pause-btn"><i class="fas fa-play"></i> Play</button>
-    </div>
-    
-    <script>
-        // Create floating pets
-        function createPets() {
-            const petTypes = ['cat', 'dog', 'fox', 'rabbit'];
-            const colors = ['#00ffaa', '#00aaff', '#ff00aa', '#aa00ff', '#ffaa00'];
-            
-            for (let i = 0; i < 20; i++) {
-                const pet = document.createElement('div');
-                const type = petTypes[Math.floor(Math.random() * petTypes.length)];
-                pet.className = `pet ${type}`;
-                
-                const size = Math.random() * 50 + 30;
-                const posX = Math.random() * 100;
-                const duration = Math.random() * 15 + 10;
-                const delay = Math.random() * 10;
-                const rotation = Math.random() * 360;
-                
-                pet.style.width = `${size}px`;
-                pet.style.height = `${size}px`;
-                pet.style.left = `${posX}%`;
-                pet.style.bottom = `-${size}px`;
-                pet.style.animationDuration = `${duration}s`;
-                pet.style.animationDelay = `${delay}s`;
-                pet.style.filter = `drop-shadow(0 0 5px ${colors[Math.floor(Math.random() * colors.length)]})`;
-                
-                document.body.appendChild(pet);
-            }
+        <audio id="background-music" loop>
+<source src="https://example.com/background-music.mp3" type="audio/mpeg">
+Ваш браузер не поддерживает аудио элемент.
+</audio>
+<input type="range" class="volume-control" id="volume-control" min="0" max="1" step="0.1" value="0.5">
+<button id="play-pause-btn">
+<i class="fas fa-play"></i> Воспроизвести
+</button>
+</div>
+<!-- Floating pets -->
+<div class="pet cat" style="top: 20%; left: 5%; animation-duration: 25s;"></div>
+<div class="pet dog" style="top: 70%; left: 10%; animation-duration: 30s;"></div>
+<div class="pet fox" style="top: 40%; left: 80%; animation-duration: 35s;"></div>
+<div class="pet rabbit" style="top: 80%; left: 85%; animation-duration: 40s;"></div>
+
+<script>
+    // Audio player functionality
+    const audioPlayer = document.getElementById('audio-player');
+    const audioControls = document.getElementById('audio-controls');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const volumeControl = document.getElementById('volume-control');
+    const backgroundMusic = document.getElementById('background-music');
+    const playIcon = playPauseBtn.querySelector('i');
+
+    audioPlayer.addEventListener('click', () => {
+        audioControls.classList.toggle('show');
+    });
+
+    playPauseBtn.addEventListener('click', () => {
+        if (backgroundMusic.paused) {
+            backgroundMusic.play();
+            playIcon.classList.remove('fa-play');
+            playIcon.classList.add('fa-pause');
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+        } else {
+            backgroundMusic.pause();
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Воспроизвести';
         }
-        
-        // Audio player functionality
-        const audioPlayer = document.getElementById('audio-player');
-        const audioControls = document.getElementById('audio-controls');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const volumeControl = document.getElementById('volume-control');
-        const bgMusic = document.getElementById('bg-music');
-        
-        let isMusicPlaying = false;
-        
-        audioPlayer.addEventListener('click', function() {
-            audioControls.classList.toggle('show');
+    });
+
+    volumeControl.addEventListener('input', () => {
+        backgroundMusic.volume = volumeControl.value;
+    });
+
+    // Discord copy functionality
+    const discordLink = document.getElementById('discord-link');
+    const discordNotification = document.getElementById('discord-notification');
+    const notificationClose = document.getElementById('notification-close');
+
+    discordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText('M.Vegas#1234').then(() => {
+            discordNotification.classList.add('show');
+            setTimeout(() => {
+                discordNotification.classList.remove('show');
+            }, 5000);
         });
-        
-        playPauseBtn.addEventListener('click', function() {
-            if (isMusicPlaying) {
-                bgMusic.pause();
-                playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Play';
-            } else {
-                bgMusic.play()
-                    .then(() => {
-                        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
-                    })
-                    .catch(e => console.log('Playback prevented:', e));
-            }
-            isMusicPlaying = !isMusicPlaying;
-        });
-        
-        volumeControl.addEventListener('input', function() {
-            bgMusic.volume = this.value;
-        });
-        
-        // Discord copy functionality
-        const discordLink = document.getElementById('discord-link');
-        discordLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            const discordUsername = 'm.vegas'; // Замените на ваш реальный Discord username
-            
-            navigator.clipboard.writeText(discordUsername)
-                .then(() => {
-                    const tooltip = this.querySelector('.tooltiptext');
-                    tooltip.textContent = 'Скопировано!';
-                    setTimeout(() => {
-                        tooltip.textContent = 'Нажмите, чтобы скопировать';
-                    }, 2000);
-                })
-                .catch(err => {
-                    console.error('Ошибка копирования: ', err);
-                });
-        });
-        
-        // Initialize
-        window.onload = function() {
-            createPets();
-            
-            // Start music automatically (but muted)
-            bgMusic.volume = 0.3;
-            
-            // Try autoplay (may be blocked by browser)
-            const playPromise = bgMusic.play();
-            
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(_ => {
-                        isMusicPlaying = true;
-                        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
-                    })
-                    .catch(error => {
-                        console.log('Autoplay prevented, showing play button');
-                    });
-            }
-        };
-       
-        // Easter egg - click logo to change colors
-        const logo = document.querySelector('h1');
-        const colors = ['#00ffaa', '#00aaff', '#ff00aa', '#aa00ff', '#ffaa00'];
-        let colorIndex = 0;
-        
-        logo.addEventListener('click', function() {
-            colorIndex = (colorIndex + 1) % colors.length;
-            document.documentElement.style.setProperty('--neon-green', colors[colorIndex]);
-            document.documentElement.style.setProperty('--neon-blue', colors[(colorIndex + 1) % colors.length]);
-            document.documentElement.style.setProperty('--neon-pink', colors[(colorIndex + 2) % colors.length]);
-            document.documentElement.style.setProperty('--neon-purple', colors[(colorIndex + 3) % colors.length]);
-        });
-        
-        // Make pets follow mouse on mousemove
-        document.addEventListener('mousemove', function(e) {
-            const pets = document.querySelectorAll('.pet');
-            pets.forEach(pet => {
-                const rect = pet.getBoundingClientRect();
-                const petX = rect.left + rect.width / 2;
-                const petY = rect.top + rect.height / 2;
-                
-                const angle = Math.atan2(e.clientY - petY, e.clientX - petX) * 180 / Math.PI;
-                pet.style.transform = `rotate(${angle + 90}deg)`;
-            });
-        });
-    </script>
-</body>
-</html>
+    });
+
+    notificationClose.addEventListener('click', () => {
+        discordNotification.classList.remove('show');
+    });
+
+    // Create more floating pets dynamically
+    function createPet() {
+        const pets = ['cat', 'dog', 'fox', 'rabbit'];
+        const petType = pets[Math.floor(Math.random() * pets.length)];
+        const pet = document.createElement('div');
+        pet.className = `pet ${petType}`;
+        pet.style.left = `${Math.random() * 100}%`;
+        pet.style.top = `${Math.random() * 100}%`;
+        pet.style.animationDuration = `${20 + Math.random() * 30}s`;
+        document.body.appendChild(pet);
+
+        // Remove pet after animation completes
+        setTimeout(() => {
+            pet.remove();
+        }, parseFloat(pet.style.animationDuration) * 1000);
+    }
+
+    // Create initial pets
+    for (let i = 0; i < 6; i++) {
+        createPet();
+    }
+
+    // Create new pets periodically
+    setInterval(createPet, 10000);
+
+    // YouTube video control
+    const youtubeVideo = document.getElementById('youtube-video');
+    const videoContainer = document.querySelector('.video-container');
+
+    videoContainer.addEventListener('mouseenter', () => {
+        youtubeVideo.src += '&autoplay=1';
+    });
+
+    videoContainer.addEventListener('mouseleave', () => {
+        youtubeVideo.src = youtubeVideo.src.replace('&autoplay=1', '');
+    });
+</script>
+    </body> </html>
+    
