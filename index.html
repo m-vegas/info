@@ -814,16 +814,30 @@
     const backgroundMusic = document.getElementById('background-music');
     const playIcon = playPauseBtn.querySelector('i');
 
+    // Initialize volume
+    backgroundMusic.volume = 0.5;
+    volumeControl.value = 0.5;
+
     audioPlayer.addEventListener('click', () => {
         audioControls.classList.toggle('show');
     });
 
     playPauseBtn.addEventListener('click', () => {
         if (backgroundMusic.paused) {
-            backgroundMusic.play();
-            playIcon.classList.remove('fa-play');
-            playIcon.classList.add('fa-pause');
-            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+            backgroundMusic.play()
+                .then(() => {
+                    playIcon.classList.remove('fa-play');
+                    playIcon.classList.add('fa-pause');
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+                })
+                .catch(error => {
+                    console.error("Audio playback failed:", error);
+                    // Show error to user
+                    playPauseBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ошибка';
+                    setTimeout(() => {
+                        playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Воспроизвести';
+                    }, 2000);
+                });
         } else {
             backgroundMusic.pause();
             playIcon.classList.remove('fa-pause');
@@ -844,6 +858,20 @@
     discordLink.addEventListener('click', (e) => {
         e.preventDefault();
         navigator.clipboard.writeText('m.vegas').then(() => {
+            discordNotification.classList.add('show');
+            setTimeout(() => {
+                discordNotification.classList.remove('show');
+            }, 5000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            // Fallback for browsers that don't support clipboard API
+            const tempInput = document.createElement('input');
+            tempInput.value = 'm.vegas';
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
             discordNotification.classList.add('show');
             setTimeout(() => {
                 discordNotification.classList.remove('show');
@@ -881,20 +909,21 @@
     setInterval(createPet, 10000);
 
     // YouTube video control
-const youtubeVideo = document.getElementById('youtube-video');
-const videoContainer = document.querySelector('.video-container');
-let isPlaying = false;
+    const youtubeVideo = document.getElementById('youtube-video');
+    const videoContainer = document.querySelector('.video-container');
+    let isPlaying = false;
 
-videoContainer.addEventListener('mouseenter', () => {
-    if (!isPlaying) {
-        youtubeVideo.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-        isPlaying = true;
-    }
-});
+    videoContainer.addEventListener('mouseenter', () => {
+        if (!isPlaying) {
+            youtubeVideo.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            isPlaying = true;
+        }
+    });
 
-videoContainer.addEventListener('mouseleave', () => {
-    if (isPlaying) {
-        youtubeVideo.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-        isPlaying = false;
-    }
-});
+    videoContainer.addEventListener('mouseleave', () => {
+        if (isPlaying) {
+            youtubeVideo.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            isPlaying = false;
+        }
+    });
+</script>
