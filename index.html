@@ -290,6 +290,7 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
         
         .social-links a {
@@ -328,6 +329,18 @@
         
         .social-links a:hover::before {
             left: 100%;
+        }
+        
+        .discord-icon {
+            background: #5865F2;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
         }
         
         /* Pet animations */
@@ -607,6 +620,46 @@
             z-index: 100;
             opacity: 0.5;
         }
+        
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -70px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+        }
+        
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -660,6 +713,11 @@
         
         <div class="social-links">
             <a href="https://github.com/m-vegas" target="_blank"><i class="fab fa-github"></i> GITHUB</a>
+            <a href="#" class="tooltip" id="discord-link">
+                <span class="discord-icon"><i class="fab fa-discord"></i></span>
+                DISCORD
+                <span class="tooltiptext">Нажмите, чтобы скопировать</span>
+            </a>
             <a href="#" target="_blank"><i class="fas fa-envelope"></i> КОНТАКТЫ</a>
         </div>
     </div>
@@ -737,6 +795,25 @@
             bgMusic.volume = this.value;
         });
         
+        // Discord copy functionality
+        const discordLink = document.getElementById('discord-link');
+        discordLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const discordUsername = 'mvegas'; // Замените на ваш реальный Discord username
+            
+            navigator.clipboard.writeText(discordUsername)
+                .then(() => {
+                    const tooltip = this.querySelector('.tooltiptext');
+                    tooltip.textContent = 'Скопировано!';
+                    setTimeout(() => {
+                        tooltip.textContent = 'Нажмите, чтобы скопировать';
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Ошибка копирования: ', err);
+                });
+        });
+        
         // Initialize
         window.onload = function() {
             createPets();
@@ -758,7 +835,7 @@
                     });
             }
         };
-        
+       
         // Easter egg - click logo to change colors
         const logo = document.querySelector('h1');
         const colors = ['#00ffaa', '#00aaff', '#ff00aa', '#aa00ff', '#ffaa00'];
