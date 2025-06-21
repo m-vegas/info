@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M.Vegas - Web & Lua Developer</title>
+    <!-- Иконка в стиле лисы для вкладки браузера -->
+    <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M85,45c0,11-11,20-25,20c-2,0-4-0.2-6-0.6c-1.7,9.5-9.8,16.6-19,16.6c-10.5,0-19-8.5-19-19s8.5-19,19-19 c4.9,0,9.4,1.9,12.8,5c2.5-1.2,5.3-1.9,8.2-1.9C74,25,85,34,85,45z' fill='%23ffaa00'/><circle cx='70' cy='40' r='5' fill='%23121212'/><circle cx='50' cy='40' r='5' fill='%23121212'/><path d='M60,55c0,0-5,5-10,5s-10-5-10-5' stroke='%23121212' stroke-width='3' fill='none'/><path d='M40,35l-15-5 M40,45l-15,5' stroke='%23ffaa00' stroke-width='4'/></svg>">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -473,7 +475,7 @@
 
         /* Video controls */
         .video-controls {
-            display: none; /* Скрываем кнопки управления видео */
+            display: none;
         }
         
         /* Animations */
@@ -660,11 +662,73 @@
             visibility: visible;
             opacity: 1;
         }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(30, 30, 30, 0.95);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border-left: 5px solid #5865F2;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+            max-width: 350px;
+            backdrop-filter: blur(5px);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            color: #5865F2;
+            font-size: 24px;
+        }
+
+        .notification-close {
+            margin-left: auto;
+            cursor: pointer;
+            color: #aaa;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .notification-close:hover {
+            color: white;
+        }
+
+        .fox-icon {
+            width: 24px;
+            height: 24px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M85,45c0,11-11,20-25,20c-2,0-4-0.2-6-0.6c-1.7,9.5-9.8,16.6-19,16.6c-10.5,0-19-8.5-19-19s8.5-19,19-19 c4.9,0,9.4,1.9,12.8,5c2.5-1.2,5.3-1.9,8.2-1.9C74,25,85,34,85,45z" fill="%23ffaa00"/><circle cx="70" cy="40" r="5" fill="%23121212"/><circle cx="50" cy="40" r="5" fill="%23121212"/><path d="M60,55c0,0-5,5-10,5s-10-5-10-5" stroke="%23121212" stroke-width="3" fill="none"/><path d="M40,35l-15-5 M40,45l-15,5" stroke="%23ffaa00" stroke-width="4"/></svg>') no-repeat center;
+            background-size: contain;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="retro-overlay"></div>
+    
+    <!-- Уведомление о копировании Discord -->
+    <div class="notification" id="discord-notification">
+        <i class="fas fa-copy notification-icon"></i>
+        <div>
+            <strong>Discord скопирован!</strong><br>
+            Теперь перейдите в Discord и вставьте его в поле добавления друга.
+        </div>
+        <span class="notification-close" id="notification-close">&times;</span>
+    </div>
     
     <div class="card">
         <h1 class="no-select">M.VEGAS</h1>
@@ -713,14 +777,13 @@
         
         <div class="social-links">
             <a href="https://github.com/m-vegas" target="_blank"><i class="fab fa-github"></i> GITHUB</a>
-            <a href="m.vegas" class="tooltip" id="discord-link">
+            <a href="#" class="tooltip" id="discord-link">
                 <span class="discord-icon"><i class="fab fa-discord"></i></span>
-                DISCORD
+                <span class="fox-icon"></span>DISCORD
                 <span class="tooltiptext">Нажмите, чтобы скопировать</span>
             </a>
         </div>
     </div>
-    
     <!-- Audio Player -->
     <div class="audio-player" id="audio-player">
         <i class="fas fa-music"></i>
