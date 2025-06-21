@@ -806,124 +806,203 @@
 <div class="pet rabbit" style="top: 80%; left: 85%; animation-duration: 40s;"></div>
 
 <script>
-    // Audio player functionality
-    const audioPlayer = document.getElementById('audio-player');
-    const audioControls = document.getElementById('audio-controls');
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const volumeControl = document.getElementById('volume-control');
-    const backgroundMusic = document.getElementById('background-music');
-    const playIcon = playPauseBtn.querySelector('i');
-
-    // Initialize volume
-    backgroundMusic.volume = 0.5;
-    volumeControl.value = 0.5;
-
-    audioPlayer.addEventListener('click', () => {
-        audioControls.classList.toggle('show');
-    });
-
-    playPauseBtn.addEventListener('click', () => {
-        if (backgroundMusic.paused) {
-            backgroundMusic.play()
-                .then(() => {
-                    playIcon.classList.remove('fa-play');
-                    playIcon.classList.add('fa-pause');
-                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
-                })
-                .catch(error => {
-                    console.error("Audio playback failed:", error);
-                    // Show error to user
-                    playPauseBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ошибка';
-                    setTimeout(() => {
-                        playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Воспроизвести';
-                    }, 2000);
-                });
-        } else {
-            backgroundMusic.pause();
-            playIcon.classList.remove('fa-pause');
-            playIcon.classList.add('fa-play');
-            playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Воспроизвести';
+    // Ждем полной загрузки DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        // ===== АУДИОПЛЕЕР =====
+        const audioPlayer = document.getElementById('audio-player');
+        const audioControls = document.getElementById('audio-controls');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const volumeControl = document.getElementById('volume-control');
+        const backgroundMusic = document.getElementById('background-music');
+        
+        // Проверка существования элементов
+        if (!backgroundMusic) {
+            console.error('Audio element not found');
+            if (audioPlayer) audioPlayer.style.display = 'none';
+            return;
         }
-    });
 
-    volumeControl.addEventListener('input', () => {
-        backgroundMusic.volume = volumeControl.value;
-    });
+        // Инициализация состояния
+        let isMusicPlaying = false;
+        backgroundMusic.volume = 0.5;
+        if (volumeControl) volumeControl.value = 0.5;
 
-    // Discord copy functionality
-    const discordLink = document.getElementById('discord-link');
-    const discordNotification = document.getElementById('discord-notification');
-    const notificationClose = document.getElementById('notification-close');
-
-    discordLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        navigator.clipboard.writeText('m.vegas').then(() => {
-            discordNotification.classList.add('show');
-            setTimeout(() => {
-                discordNotification.classList.remove('show');
-            }, 5000);
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-            // Fallback for browsers that don't support clipboard API
-            const tempInput = document.createElement('input');
-            tempInput.value = 'm.vegas';
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
+        // Функция обновления интерфейса
+        function updateMusicUI() {
+            if (!playPauseBtn) return;
             
-            discordNotification.classList.add('show');
-            setTimeout(() => {
-                discordNotification.classList.remove('show');
-            }, 5000);
-        });
-    });
-
-    notificationClose.addEventListener('click', () => {
-        discordNotification.classList.remove('show');
-    });
-
-    // Create more floating pets dynamically
-    function createPet() {
-        const pets = ['cat', 'dog', 'fox', 'rabbit'];
-        const petType = pets[Math.floor(Math.random() * pets.length)];
-        const pet = document.createElement('div');
-        pet.className = `pet ${petType}`;
-        pet.style.left = `${Math.random() * 100}%`;
-        pet.style.top = `${Math.random() * 100}%`;
-        pet.style.animationDuration = `${20 + Math.random() * 30}s`;
-        document.body.appendChild(pet);
-
-        // Remove pet after animation completes
-        setTimeout(() => {
-            pet.remove();
-        }, parseFloat(pet.style.animationDuration) * 1000);
-    }
-
-    // Create initial pets
-    for (let i = 0; i < 6; i++) {
-        createPet();
-    }
-
-    // Create new pets periodically
-    setInterval(createPet, 10000);
-
-    // YouTube video control
-    const youtubeVideo = document.getElementById('youtube-video');
-    const videoContainer = document.querySelector('.video-container');
-    let isPlaying = false;
-
-    videoContainer.addEventListener('mouseenter', () => {
-        if (!isPlaying) {
-            youtubeVideo.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-            isPlaying = true;
+            if (isMusicPlaying) {
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+                if (audioPlayer) audioPlayer.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i> Воспроизвести';
+                if (audioPlayer) audioPlayer.innerHTML = '<i class="fas fa-music"></i>';
+            }
         }
-    });
 
-    videoContainer.addEventListener('mouseleave', () => {
-        if (isPlaying) {
-            youtubeVideo.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-            isPlaying = false;
+        // Обработчик клика по иконке аудио
+        if (audioPlayer && audioControls) {
+            audioPlayer.addEventListener('click', function(e) {
+                e.stopPropagation();
+                audioControls.classList.toggle('show');
+            });
+        }
+
+        // Закрытие контролов при клике вне их области
+        document.addEventListener('click', function(e) {
+            if (audioControls && !audioControls.contains(e.target) && e.target !== audioPlayer) {
+                audioControls.classList.remove('show');
+            }
+        });
+
+        // Управление воспроизведением
+        if (playPauseBtn) {
+            playPauseBtn.addEventListener('click', async function() {
+                try {
+                    if (isMusicPlaying) {
+                        await backgroundMusic.pause();
+                    } else {
+                        await backgroundMusic.play();
+                    }
+                    isMusicPlaying = !backgroundMusic.paused;
+                    updateMusicUI();
+                } catch (error) {
+                    console.error('Audio error:', error);
+                    if (playPauseBtn) {
+                        playPauseBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ошибка';
+                        setTimeout(updateMusicUI, 2000);
+                    }
+                    
+                    // Для автоплей политики
+                    if (error.name === 'NotAllowedError') {
+                        alert('Разрешите воспроизведение музыки в браузере');
+                    }
+                }
+            });
+        }
+
+        // Управление громкостью
+        if (volumeControl) {
+            volumeControl.addEventListener('input', function() {
+                backgroundMusic.volume = this.value;
+                if (audioPlayer) {
+                    if (this.value > 0.5) {
+                        audioPlayer.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    } else if (this.value > 0) {
+                        audioPlayer.innerHTML = '<i class="fas fa-volume-down"></i>';
+                    } else {
+                        audioPlayer.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                    }
+                }
+            });
+        }
+
+        // Обработчики событий аудио
+        backgroundMusic.addEventListener('play', function() {
+            isMusicPlaying = true;
+            updateMusicUI();
+        });
+
+        backgroundMusic.addEventListener('pause', function() {
+            isMusicPlaying = false;
+            updateMusicUI();
+        });
+
+        // ===== DISCORD КНОПКА =====
+        const discordLink = document.getElementById('discord-link');
+        const discordNotification = document.getElementById('discord-notification');
+        const notificationClose = document.getElementById('notification-close');
+
+        if (discordLink && discordNotification) {
+            discordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const copyText = 'm.vegas';
+                const copyToClipboard = () => {
+                    // Modern API
+                    if (navigator.clipboard) {
+                        return navigator.clipboard.writeText(copyText)
+                            .then(() => true)
+                            .catch(() => false);
+                    }
+                    
+                    // Fallback для старых браузеров
+                    try {
+                        const textarea = document.createElement('textarea');
+                        textarea.value = copyText;
+                        textarea.style.position = 'fixed';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        const result = document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        return result;
+                    } catch (err) {
+                        return false;
+                    }
+                };
+
+                copyToClipboard().then(success => {
+                    if (success) {
+                        discordNotification.classList.add('show');
+                        setTimeout(() => {
+                            discordNotification.classList.remove('show');
+                        }, 5000);
+                    } else {
+                        console.error('Copy failed');
+                    }
+                });
+            });
+        }
+
+        if (notificationClose && discordNotification) {
+            notificationClose.addEventListener('click', function() {
+                discordNotification.classList.remove('show');
+            });
+        }
+
+        // ===== ПЛАВАЮЩИЕ ЖИВОТНЫЕ =====
+        function createPet() {
+            const pets = ['cat', 'dog', 'fox', 'rabbit'];
+            const petType = pets[Math.floor(Math.random() * pets.length)];
+            const pet = document.createElement('div');
+            pet.className = `pet ${petType}`;
+            pet.style.left = `${Math.random() * 100}%`;
+            pet.style.top = `${Math.random() * 100}%`;
+            pet.style.animationDuration = `${20 + Math.random() * 30}s`;
+            document.body.appendChild(pet);
+
+            setTimeout(() => {
+                pet.remove();
+            }, parseFloat(pet.style.animationDuration) * 1000);
+        }
+
+        // Создаем начальных животных
+        for (let i = 0; i < 6; i++) {
+            createPet();
+        }
+
+        // Новые животные каждые 10 секунд
+        setInterval(createPet, 10000);
+
+        // ===== YOUTUBE ВИДЕО =====
+        const youtubeVideo = document.getElementById('youtube-video');
+        const videoContainer = document.querySelector('.video-container');
+        let isVideoPlaying = false;
+
+        if (youtubeVideo && videoContainer) {
+            videoContainer.addEventListener('mouseenter', () => {
+                if (!isVideoPlaying) {
+                    youtubeVideo.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                    isVideoPlaying = true;
+                }
+            });
+
+            videoContainer.addEventListener('mouseleave', () => {
+                if (isVideoPlaying) {
+                    youtubeVideo.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    isVideoPlaying = false;
+                }
+            });
         }
     });
 </script>
